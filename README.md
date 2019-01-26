@@ -33,7 +33,7 @@ I do not take any responsibility of the trouble you may faced. Using, even seein
 
 建议在虚拟机下运行，并使用代理保护隐私安全
 
-### 百度搜索爬虫
+## 百度搜索爬虫
 #### BaiduResult.java
 爬取百度搜索结果
 
@@ -58,7 +58,7 @@ I do not take any responsibility of the trouble you may faced. Using, even seein
 
 因为百度的HTML写的比较混乱所以考虑到制作成本暂不制作爬取标题和摘要
 
-### 谷歌1搜索爬虫
+## 谷歌搜索爬虫
 #### GoogleResult.java
 [English](https://github.com/50Death/Spider-SlimAPP/blob/master/README.md#english)
 
