@@ -22,6 +22,16 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.191-b12, mixed mode)
 ### IDE
 IntelliJ IDEA
 
+## 免责声明
+本仓库所涉及一切程序, 代码等元素均为学习所用, 程序设计者即本人对使用者在使用过程中造成的一切后果不承担任何责任, 下载或查阅或参考任何代码或文件即表示您同意一切后果由使用者承担
+I do not take any responsibility of the trouble you may faced. Using, even seeing my code means all the consequences is up to you
+
+## 使用安全
+### 进行大范围爬取会使您的计算机访问到风险网站， 您可能成为XSS攻击等被动攻击方式的潜在受害者
+### You may become the victim of XSS attacks
+
+建议在虚拟机下运行，并使用代理保护隐私安全
+
 ### 百度搜索爬虫
 #### BaiduResult.java
 爬取百度搜索结果
