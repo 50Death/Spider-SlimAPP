@@ -96,7 +96,7 @@ Class is able to print all urls which can be a tool for google hacks
     <version>1.11.3</version>
 </dependency>
 
-<!-- 我的另一个Reponsitory, 见 Spider-SlimAPP -->
+<!-- 我的另一个Reponsitory, 见 Spider-Tools -->
  <dependency>
     <groupId>com.lyc.spider.tools</groupId>
     <artifactId>url-tools</artifactId>
