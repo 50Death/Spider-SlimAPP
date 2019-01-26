@@ -24,6 +24,7 @@ IntelliJ IDEA
 
 ## 免责声明
 本仓库所涉及一切程序, 代码等元素均为学习所用, 程序设计者即本人对使用者在使用过程中造成的一切后果不承担任何责任, 下载或查阅或参考任何代码或文件即表示您同意一切后果由使用者承担
+
 I do not take any responsibility of the trouble you may faced. Using, even seeing my code means all the consequences is up to you
 
 ## 使用安全
