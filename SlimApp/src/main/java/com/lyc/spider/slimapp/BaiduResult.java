@@ -1,10 +1,14 @@
 package com.lyc.spider.slimapp;
 
 import com.lyc.spider.tools.DefaultHeaders;
+import com.lyc.spider.tools.GetURLPage;
 import com.lyc.spider.tools.HttpURL;
 import com.lyc.spider.tools.URLFetch;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,6 +19,7 @@ import java.util.Vector;
 /**
  * 获取百度搜索结果的网址
  * 百度会将搜索结果以自己的网址写进html，需要进行二次访问让其跳转得到最终网址
+ * TODO 爬取更丰富的搜索结果而不仅仅是网址（正则/cssQuery筛选）
  */
 public class BaiduResult {
 
@@ -139,7 +144,7 @@ public class BaiduResult {
      * @return
      */
     public HttpURL getUrls() {
-        //判断页数是否比线程数少
+        //判断页数是否比线程数少，避免线程过多
         if (pages < threadNumber) {
             threadNumber = pages;
         }
@@ -187,7 +192,7 @@ public class BaiduResult {
     /**
      * 这个线程用来爬取搜索结果上所有的中间网址
      */
-    class BaiduResultScanner1 implements Runnable {
+    private class BaiduResultScanner1 implements Runnable {
         public void run() {
             while (toUrls.getSize() != 0) {
                 //创建得到页面实例
@@ -196,6 +201,10 @@ public class BaiduResult {
                 urlFetch.setMode(URLFetch.Modes.links);
                 //设定超时时长
                 urlFetch.setTimeout(timeout);
+                //判断是否使用代理
+                if (host != null) {
+                    urlFetch.setProxy(host,port);
+                }
                 //设置重连次数
                 urlFetch.setRetry(retry);
                 //获得返回的链接
@@ -239,7 +248,7 @@ public class BaiduResult {
      * 这个线程用来获取中间网址经过跳转后的实际网址，需要打开中间网址让其跳转
      * 然后分析html内容
      */
-    class BaiduResultScanner2 implements Runnable {
+    private class BaiduResultScanner2 implements Runnable {
         public void run() {
             while (middleURLs.getSize() != 0) {
                 String finalURL = null;
@@ -247,7 +256,7 @@ public class BaiduResult {
                 //TODO 此处存在脏读，但不影响结果 -> while判断和下面的popURL
 
                 //失败重连循环
-                for(int i=-1;i<retry;i++) {
+                for (int i = -1; i < retry; i++) {
                     try {
                         //创建链接实例，设置Jsoup链接的url,超时时长,头部
                         Connection connection = Jsoup.connect(middleURLs.popURL()).timeout(timeout).headers(headers);
@@ -268,10 +277,10 @@ public class BaiduResult {
                         e.printStackTrace();
                         try {
                             Thread.sleep(1000);
-                        }catch (InterruptedException e1){
+                        } catch (InterruptedException e1) {
                             e.printStackTrace();
                         }
-                    } catch (NullPointerException e){
+                    } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
                 }
@@ -284,6 +293,51 @@ public class BaiduResult {
                 }
                 System.out.println(finalURL);
                 urls.addURL(finalURL);
+
+            }
+        }
+    }
+
+    /**
+     * 对1的更正, 百度搜索页HTML结构如下：
+     * 每一个c-container
+     * 有图的<h3>summary写在
+     *
+     * TODO 因为百度写的太乱了而暂时搁置
+     * ps: 比谷歌乱太多了...
+     */
+    private class BaiduResultScanner3 implements Runnable{
+        public void run() {
+            //得到页面
+            GetURLPage urlPage = new GetURLPage(toUrls.popURL(),headers);
+
+            urlPage.setRetry(retry);
+
+            urlPage.setProxy(host,port);
+
+            urlPage.setTimeout(timeout);
+
+            Document document = urlPage.getPage();
+
+            //获取每个搜索结果
+            Elements container = document.select("div[class~=.*c-container.*]");
+
+            /**
+             * TODO 进行筛选
+             * 百度将搜索结果至少分为3类： 百度百科、 XXX的最新相关信息、 视频推荐
+             * 每一种里面的构造都不尽相同，需要分开筛选
+             * 链接和标题都在<h3></h3>里，但是摘要位置都不相同，存在不同位置标签相同的情况，三个类型必须完全分开筛选！
+             */
+            for(Element con: container){
+                //处理h3
+                Element h3 = con.selectFirst("h3");
+                String url = h3.select("a[href]").attr("abs:href");
+                String title = h3.select("a").text();
+
+                //TODO
+                //TODO
+                //TODO
+                //may not do forever....
 
             }
         }
