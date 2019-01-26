@@ -49,7 +49,8 @@ IntelliJ IDEA
 
 ### 谷歌1搜索爬虫
 #### GoogleResult.java
-[English]()
+[English](https://github.com/50Death/Spider-SlimAPP/blob/master/README.md#english)
+
 爬取谷歌搜索结果
 
 目前除了不能爬取js加载的视频以外都可以爬到
